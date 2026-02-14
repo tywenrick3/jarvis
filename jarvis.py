@@ -18,12 +18,12 @@ def load_system_prompt() -> str:
     return "You are JARVIS, a sharp and concise personal AI agent."
 
 
-def agent(user_message: str):
+def agent(user_message: str, messages: list):
     print(f"\n{'='*60}")
     print(f"You: {user_message}")
     print(f"{'='*60}\n")
 
-    messages = [{"role": "user", "content": user_message}]
+    messages.append({"role": "user", "content": user_message})
     system = load_system_prompt()
 
     while True:
@@ -62,12 +62,13 @@ if __name__ == "__main__":
     import sys
 
     if len(sys.argv) > 1:
-        agent(" ".join(sys.argv[1:]))
+        agent(" ".join(sys.argv[1:]), messages=[])
     else:
-        print("Jarvis 0.0.1(type 'quit' to exit)\n")
+        print("Jarvis 0.0.1 (type 'quit' to exit)\n")
+        conversation = []
         while True:
             user_input = input("You: ").strip()
             if user_input.lower() in ("quit", "exit", "q"):
                 break
             if user_input:
-                agent(user_input)
+                agent(user_input, conversation)
