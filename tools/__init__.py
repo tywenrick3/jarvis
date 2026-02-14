@@ -1,6 +1,6 @@
-from tools import bash, read_file, search_web, send_email, web_fetch, write_file
+from tools import bash, read_email, read_file, search_web, send_email, web_fetch, write_file
 
-_modules = [bash, read_file, search_web, send_email, web_fetch, write_file]
+_modules = [bash, read_email, read_file, search_web, send_email, web_fetch, write_file]
 
 TOOLS = [m.schema for m in _modules]
 
