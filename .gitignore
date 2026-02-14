@@ -1,0 +1,11 @@
+/venv
+.env
+config.py
+/scripts
+/migrations
+/instance
+/flask_session
+/tests
+/blogsMD
+/logs
+__pycache__
