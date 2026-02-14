@@ -1,6 +1,7 @@
 import os
 import imaplib
 import email
+import email.message
 from email.header import decode_header
 
 BODY_TRUNCATE = 2000
