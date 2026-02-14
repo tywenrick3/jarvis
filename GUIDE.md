@@ -26,7 +26,7 @@ Final response
 
 ### 1. Tools Are Everything
 
-The loop is done. From here, the quality of your agent is determined by the tools you give it. Each tool should:
+Each tool should:
 
 - Do **one thing** clearly
 - Return **concise, useful output** (the model pays per token for tool results too)
@@ -37,8 +37,6 @@ Tool ideas roughly ordered by usefulness:
 
 | Tool | What it unlocks |
 |------|----------------|
-| `web_fetch` | Give it access to the internet (use `httpx` or `requests`) |
-| `search_web` | Pair with a search API (SerpAPI, Tavily, Brave Search) |
 | `sql_query` | Connect it to your database |
 | `send_message` | Slack, Discord, email — let it communicate |
 | `list_directory` | Structured file exploration |

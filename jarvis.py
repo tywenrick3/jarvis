@@ -1,5 +1,6 @@
 import anthropic
 import json
+from pathlib import Path
 
 from dotenv import load_dotenv
 from tools import TOOLS, execute_tool
@@ -8,6 +9,13 @@ load_dotenv()
 
 client = anthropic.Anthropic()
 MODEL = "claude-opus-4-6"
+SYSTEM_PROMPT_PATH = Path(__file__).parent / "JARVIS.md"
+
+
+def load_system_prompt() -> str:
+    if SYSTEM_PROMPT_PATH.exists():
+        return SYSTEM_PROMPT_PATH.read_text()
+    return "You are JARVIS, a sharp and concise personal AI agent."
 
 
 def agent(user_message: str):
@@ -16,7 +24,7 @@ def agent(user_message: str):
     print(f"{'='*60}\n")
 
     messages = [{"role": "user", "content": user_message}]
-    system = "You are a helpful assistant with access to tools. Use them as needed to accomplish tasks. Work step by step."
+    system = load_system_prompt()
 
     while True:
         response = client.messages.create(
@@ -56,7 +64,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         agent(" ".join(sys.argv[1:]))
     else:
-        print("Jarvis (type 'quit' to exit)\n")
+        print("Jarvis 0.0.1(type 'quit' to exit)\n")
         while True:
             user_input = input("You: ").strip()
             if user_input.lower() in ("quit", "exit", "q"):
