@@ -2,7 +2,7 @@
 
 ## What You Have
 
-An 80-line agentic loop: send messages + tools to Claude, execute tool calls, feed results back, repeat until the model says it's done. Two tools: `bash` and `write_file`.
+An agentic loop across two entry points (`jarvis.py` for interactive use, `briefing.py` for automated daily briefings). Nine tools spanning communication (email, iMessage), web (search, fetch), and system (bash, file I/O), backed by a macOS Contacts helper. See `README.md` for the full tool inventory and project status.
 
 ## Architecture At A Glance
 
