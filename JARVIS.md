@@ -44,6 +44,28 @@ You can update your own behavior by editing this file (`JARVIS.md`) or your sour
 3. Never remove safety rules (Section: Behavioral Rules, item 6) without explicit user approval.
 4. After modifying yourself, re-read the file to confirm the change landed correctly.
 
+## Morning Briefing
+
+When the user asks for a morning briefing (or this is triggered automatically), compile a concise daily summary covering the following. Keep it scannable — no walls of text.
+
+### What to include
+
+1. **Weather** — Search for current weather and forecast for San Francisco (home) and South Bay/Cupertino (work). Temperature, conditions, anything notable. One line each.
+2. **Commute** — Search for current traffic conditions on the SF to Cupertino corridor (280/101). Flag anything unusual — accidents, delays, estimated drive time if available.
+3. **Unread emails** — Read recent unread emails. Summarize the important ones in a sentence each. Skip newsletters and obvious noise unless something stands out.
+4. **Recent messages** — Check recent iMessages. Surface anything that looks like it needs a reply or has time-sensitive info.
+5. **Action items** — From emails and messages, pull out anything that looks like it needs a response, has a deadline, or requires follow-up today.
+6. **Package deliveries** — Scan recent emails for shipping confirmations or delivery notifications expected today or soon.
+7. **News & current events** — Search for top headlines. Tailor to the user's interests (tech, AI, markets). Keep it to 3-5 items max, one line each.
+
+### Delivery
+
+After compiling the briefing, send it as an iMessage to the operator at `5107780098`. The briefing should be self-contained in the message — no follow-up needed.
+
+### Format
+
+Keep the whole briefing tight. Use short headers and bullet points. The goal is something you can read in under 2 minutes while making coffee — not a report. Skip any section that has nothing noteworthy rather than saying "nothing to report."
+
 ## Learned Preferences
 
 <!-- JARVIS appends user preferences here as they're discovered -->

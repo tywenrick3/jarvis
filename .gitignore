@@ -10,3 +10,5 @@ config.py
 /logs
 __pycache__
 .DS_Store
+
+run_briefing.sh
