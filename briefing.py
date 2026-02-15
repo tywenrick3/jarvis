@@ -1,16 +1,18 @@
-import anthropic
 import json
 from pathlib import Path
 
 from dotenv import load_dotenv
 from tools import read_email, read_imessage, search_web, send_imessage
+from config import load_config
+from models import chat
+from usage import UsageTracker
 
 import os
 
 load_dotenv()
 
-client = anthropic.Anthropic()
-MODEL = "claude-sonnet-4-5-20250929"
+cfg = load_config()
+tracker = UsageTracker(budget=cfg.budget)
 SYSTEM_PROMPT_PATH = Path(__file__).parent / "JARVIS.md"
 OPERATOR_PHONE = os.environ.get("OPERATOR_PHONE", "")
 
@@ -39,35 +41,32 @@ def run():
         system += f"\n\nOperator phone number: {OPERATOR_PHONE}"
 
     while True:
-        response = client.messages.create(
-            model=MODEL,
-            max_tokens=4096,
-            system=system,
-            tools=TOOLS,
-            messages=messages,
-        )
+        result = chat(cfg.briefing, system=system, messages=messages, tools=TOOLS)
+        tracker.record(result, model_name=cfg.briefing.name)
 
-        for block in response.content:
+        for block in result.content:
             if block.type == "text":
                 print(block.text)
 
-        if response.stop_reason == "end_turn":
+        if result.stop_reason == "end_turn" or tracker.over_budget:
             break
 
         tool_results = []
-        for block in response.content:
+        for block in result.content:
             if block.type == "tool_use":
                 print(f"  -> {block.name}")
-                result = execute_tool(block.name, block.input)
-                print(f"  <- {result[:200]}{'...' if len(result) > 200 else ''}\n")
+                res = execute_tool(block.name, block.input)
+                print(f"  <- {res[:200]}{'...' if len(res) > 200 else ''}\n")
                 tool_results.append({
                     "type": "tool_result",
                     "tool_use_id": block.id,
-                    "content": result,
+                    "content": res,
                 })
 
-        messages.append({"role": "assistant", "content": response.content})
+        messages.append({"role": "assistant", "content": result.content})
         messages.append({"role": "user", "content": tool_results})
+
+    print(f"\n{tracker.summary(cfg.briefing.name)}")
 
 
 if __name__ == "__main__":

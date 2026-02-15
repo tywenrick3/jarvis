@@ -86,13 +86,15 @@ Your agent forgets everything between runs. Options:
 
 ### 6. Multi-Model Strategy
 
+`config.toml` lets you swap providers (Anthropic / OpenAI) and models without changing code. The `models.py` abstraction handles tool schema conversion, system prompt placement, and response normalization so the agentic loop stays identical regardless of provider.
+
 Not every task needs Opus. Consider:
 
 - **Haiku** for simple tool-routing decisions, summarization, quick tasks
 - **Sonnet** for most tool-use work
 - **Opus** for hard reasoning, planning, complex multi-step tasks
 
-You could even let the agent pick: use a cheap model to classify the task, then route to the right model.
+Future work: an auto-router that classifies incoming tasks and picks the right model/provider automatically.
 
 ### 7. Safety & Permissions
 
