@@ -86,6 +86,7 @@ Uses a reduced tool set (read_email, read_imessage, search_web, send_imessage) o
 | `TAVILY_API_KEY` | Web search |
 | `EMAIL_ADDRESS` | Gmail address (IMAP/SMTP) |
 | `EMAIL_APP_PASSWORD` | Gmail app password |
+| `OPERATOR_PHONE` | Phone number for briefing delivery (iMessage) |
 
 Optional: `EMAIL_IMAP_HOST`, `EMAIL_SMTP_HOST`, `EMAIL_SMTP_PORT` (default to Gmail).
 

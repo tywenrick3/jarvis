@@ -60,7 +60,7 @@ When the user asks for a morning briefing (or this is triggered automatically), 
 
 ### Delivery
 
-After compiling the briefing, send it as an iMessage to the operator at `5107780098`. The briefing should be self-contained in the message — no follow-up needed.
+After compiling the briefing, send it as an iMessage to the operator's phone number (provided via the `OPERATOR_PHONE` environment variable). The briefing should be self-contained in the message — no follow-up needed.
 
 ### Format
 

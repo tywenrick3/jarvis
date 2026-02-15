@@ -5,11 +5,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 from tools import read_email, read_imessage, search_web, send_imessage
 
+import os
+
 load_dotenv()
 
 client = anthropic.Anthropic()
 MODEL = "claude-sonnet-4-5-20250929"
 SYSTEM_PROMPT_PATH = Path(__file__).parent / "JARVIS.md"
+OPERATOR_PHONE = os.environ.get("OPERATOR_PHONE", "")
 
 _modules = [read_email, read_imessage, search_web, send_imessage]
 TOOLS = [m.schema for m in _modules]
@@ -32,6 +35,8 @@ def load_system_prompt() -> str:
 def run():
     messages = [{"role": "user", "content": "morning briefing"}]
     system = load_system_prompt()
+    if OPERATOR_PHONE:
+        system += f"\n\nOperator phone number: {OPERATOR_PHONE}"
 
     while True:
         response = client.messages.create(
