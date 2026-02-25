@@ -1,5 +1,3 @@
-"""Shared contact lookup — resolves a name to a phone number via the macOS Contacts database."""
-
 import glob
 import os
 import re
@@ -62,7 +60,6 @@ def resolve_contact(name: str) -> list[dict]:
 
 
 def reverse_lookup(phone_numbers: list[str]) -> dict[str, str]:
-    """Map phone numbers to contact names. Returns {normalized_phone: name}."""
     if not phone_numbers:
         return {}
 
@@ -93,5 +90,4 @@ def reverse_lookup(phone_numbers: list[str]) -> dict[str, str]:
         except Exception:
             continue
 
-    # Only return entries for the requested numbers
     return {num: results[num] for num in phone_numbers if num in results}

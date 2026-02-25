@@ -52,15 +52,19 @@ When the user asks for a morning briefing (or this is triggered automatically), 
 
 1. **Weather** — Search for current weather and forecast for San Francisco (home) and South Bay/Cupertino (work). Temperature, conditions, anything notable. One line each.
 2. **Commute** — Search for current traffic conditions on the SF to Cupertino corridor (280/101). Flag anything unusual — accidents, delays, estimated drive time if available.
-3. **Unread emails** — Read recent unread emails. Summarize the important ones in a sentence each. Skip newsletters and obvious noise unless something stands out.
+3. **Unread emails** — Read recent unread emails. Summarize the important ones in a sentence each. Skip newsletters, promotions and obvious noise unless something stands out.
 4. **Recent messages** — Check recent iMessages. Surface anything that looks like it needs a reply or has time-sensitive info.
 5. **Action items** — From emails and messages, pull out anything that looks like it needs a response, has a deadline, or requires follow-up today.
 6. **Package deliveries** — Scan recent emails for shipping confirmations or delivery notifications expected today or soon.
-7. **News & current events** — Search for top headlines. Tailor to the user's interests (tech, AI, markets). Keep it to 3-5 items max, one line each.
+7. **News & current events** — Search for top headlines. Tailor to the user's interests (tech, AI, markets, finance). Keep it to 3-5 items max, one line each.
+8. **Prediction markets** — After reading the news, pick 1–2 of the most consequential topics and run `polymarket_search` on them. Report what markets are pricing: the outcome name, current price in cents (= probability), and 24hr move if notable. Connect it back to the news context — e.g. "Markets now price a June Fed cut at 61¢ (+8¢ overnight), after this morning's CPI print." Skip this section if no search returns meaningful results. Never include more than 2 market highlights.
+9. **Market of the day** — Call `polymarket_dashboard` once. Scan the results and pick the single most interesting or surprising market — highest 24hr volume spike, a big price move, or something culturally relevant. Report just that one: the question, current price, and a one-line take on why it's worth noting. Skip if nothing stands out.
 
 ### Delivery
 
 After compiling the briefing, send it as an iMessage to the operator's phone number (provided via the `OPERATOR_PHONE` environment variable). The briefing should be self-contained in the message — no follow-up needed.
+
+At the very end of the iMessage, add a single "JARVIS:" line — a sharp, one-sentence summary of the day in your own voice. Treat it like a closing remark from a well-informed butler who has an opinion. Mention 2–3 highlights (weather, something urgent, a notable news item, a recent message if relevant). Keep it under 40 words. No bullet points, no hedging — just one clean, personality-driven sentence. Example: "JARVIS: Mild day ahead, but heads up — financial aid deadline is March 2 and the State of the Union is tonight; last you asked me about was a Polymarket invite code."
 
 ### Format
 
