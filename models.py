@@ -119,12 +119,12 @@ def _convert_messages_to_openai(system: str, messages: list) -> list:
                 btype = getattr(block, "type", None) or (block.get("type") if isinstance(block, dict) else None)
 
                 if btype == "text":
-                    text_parts.append(getattr(block, "text", None) or block.get("text", ""))
+                    text_parts.append(block.get("text", "") if isinstance(block, dict) else getattr(block, "text", ""))
                 elif btype == "tool_use":
                     import json
-                    name = getattr(block, "name", None) or block.get("name")
-                    bid = getattr(block, "id", None) or block.get("id")
-                    args = getattr(block, "input", None) or block.get("input", {})
+                    name = block.get("name") if isinstance(block, dict) else getattr(block, "name", None)
+                    bid = block.get("id") if isinstance(block, dict) else getattr(block, "id", None)
+                    args = block.get("input", {}) if isinstance(block, dict) else getattr(block, "input", {})
                     tool_calls.append({
                         "id": bid,
                         "type": "function",

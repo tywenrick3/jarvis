@@ -5,8 +5,8 @@ max_tokens = 4096
 temperature = 1.0
 
 [model.briefing]
-provider = "anthropic"
-name = "claude-sonnet-4-5-20250929"
+provider = "openai"
+name = "gpt-5.1"
 max_tokens = 4096
 
 [budget]
