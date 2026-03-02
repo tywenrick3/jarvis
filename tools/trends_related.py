@@ -21,8 +21,8 @@ schema = {
             },
             "limit": {
                 "type": "integer",
-                "description": "Max results per category (default 10)",
-                "default": 10,
+                "description": "Max results per category (default 5)",
+                "default": 5,
             },
         },
         "required": ["query"],
@@ -30,7 +30,7 @@ schema = {
 }
 
 
-def execute(query: str, geo: str = "US", limit: int = 10) -> str:
+def execute(query: str, geo: str = "US", limit: int = 5) -> str:
     cmd = ["trends", "related", query, "--limit", str(limit), "--format", "json"]
     if geo:
         cmd += ["--geo", geo]

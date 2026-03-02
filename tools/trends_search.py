@@ -1,3 +1,4 @@
+import json
 import subprocess
 
 schema = {
@@ -35,4 +36,10 @@ def execute(query: str, timeframe: str = "1y", geo: str = "US") -> str:
     if geo:
         cmd += ["--geo", geo]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-    return result.stdout.strip() or result.stderr.strip() or "No results."
+    output = result.stdout.strip() or result.stderr.strip() or "No results."
+    try:
+        data = json.loads(output)
+        data.pop("series", None)
+        return json.dumps(data)
+    except (json.JSONDecodeError, AttributeError):
+        return output

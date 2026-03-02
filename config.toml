@@ -5,8 +5,8 @@ max_tokens = 4096
 temperature = 1.0
 
 [model.briefing]
-provider = "openai"
-name = "gpt-5.1"
+provider = "anthropic"
+name = "claude-opus-4-6"
 max_tokens = 4096
 
 [budget]

@@ -17,8 +17,8 @@ schema = {
             },
             "limit": {
                 "type": "integer",
-                "description": "Number of trending topics to return (default 20)",
-                "default": 20,
+                "description": "Number of trending topics to return (default 10)",
+                "default": 10,
             },
             "realtime": {
                 "type": "boolean",
@@ -31,7 +31,7 @@ schema = {
 }
 
 
-def execute(geo: str = "US", limit: int = 20, realtime: bool = False) -> str:
+def execute(geo: str = "US", limit: int = 10, realtime: bool = False) -> str:
     cmd = ["trends", "trending", "--geo", geo, "--limit", str(limit), "--format", "json"]
     if realtime:
         cmd.append("--realtime")
