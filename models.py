@@ -32,23 +32,32 @@ def _get_anthropic():
 
 
 def _chat_anthropic(cfg: ModelConfig, system: str, messages: list, tools: list) -> ChatResult:
+    import time
     client = _get_anthropic()
-    response = client.messages.create(
-        model=cfg.name,
-        max_tokens=cfg.max_tokens,
-        temperature=cfg.temperature,
-        system=system,
-        tools=tools,
-        messages=messages,
-    )
-    return ChatResult(
-        content=response.content,
-        stop_reason=response.stop_reason,
-        usage=Usage(
-            input_tokens=response.usage.input_tokens,
-            output_tokens=response.usage.output_tokens,
-        ),
-    )
+    for attempt in range(3):
+        try:
+            response = client.messages.create(
+                model=cfg.name,
+                max_tokens=cfg.max_tokens,
+                temperature=cfg.temperature,
+                system=system,
+                tools=tools,
+                messages=messages,
+            )
+            return ChatResult(
+                content=response.content,
+                stop_reason=response.stop_reason,
+                usage=Usage(
+                    input_tokens=response.usage.input_tokens,
+                    output_tokens=response.usage.output_tokens,
+                ),
+            )
+        except Exception as e:
+            if "rate_limit" in str(e).lower() and attempt < 2:
+                print(f"Rate limit hit, retrying in 60s (attempt {attempt + 1}/3)...")
+                time.sleep(60)
+            else:
+                raise
 
 
 # ---------------------------------------------------------------------------
@@ -196,6 +205,8 @@ class _ToolUseBlock:
 
 
 def _chat_openai(cfg: ModelConfig, system: str, messages: list, tools: list) -> ChatResult:
+    import time
+    import openai
     client = _get_openai()
     oai_messages = _convert_messages_to_openai(system, messages)
     oai_tools = _convert_tools_to_openai(tools)
@@ -207,12 +218,19 @@ def _chat_openai(cfg: ModelConfig, system: str, messages: list, tools: list) -> 
         max_completion_tokens=cfg.max_tokens,
         temperature=cfg.temperature,
     )
-    # Remove None tools to avoid API error
     if kwargs["tools"] is None:
         del kwargs["tools"]
 
-    response = client.chat.completions.create(**kwargs)
-    return _normalize_openai_response(response)
+    for attempt in range(3):
+        try:
+            response = client.chat.completions.create(**kwargs)
+            return _normalize_openai_response(response)
+        except openai.RateLimitError:
+            if attempt < 2:
+                print(f"Rate limit hit, retrying in 60s (attempt {attempt + 1}/3)...")
+                time.sleep(60)
+            else:
+                raise
 
 
 # ---------------------------------------------------------------------------
