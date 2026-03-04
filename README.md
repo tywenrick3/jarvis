@@ -1,6 +1,6 @@
 # JARVIS
 
-A personal AI agent, running as a Python CLI. JARVIS handles email, messaging, web research, file operations, and delivers automated daily briefings — modeled after a sharp, no-nonsense British butler.
+Personal AI agent with pluggable tools, multi-provider model abstraction, and automated daily briefings — modeled after a sharp, no-nonsense British butler.
 
 ## Project Status
 
@@ -14,7 +14,7 @@ User input / cron trigger
         ▼
 ┌──────────────────────────────┐
 │  while True:                 │
-│    response = claude(msgs)   │
+│    response = chat(msgs)     │
 │    if done: break            │
 │    for each tool_use block:  │
 │      result = execute(tool)  │
@@ -27,16 +27,35 @@ User input / cron trigger
 
 Two entry points share this loop:
 
-| Entry Point | Model | Purpose |
-|---|---|---|
-| `jarvis.py` | Opus 4.6 | Interactive CLI — REPL or single-command mode |
-| `briefing.py` | Sonnet 4.5 | Automated morning briefing via cron |
+| Entry Point | Purpose |
+|---|---|
+| `jarvis.py` | Interactive CLI — REPL or single-command mode |
+| `briefing.py` | Automated morning briefing via cron |
+
+Model and provider for each entry point are configured in `config.toml` — swap between Anthropic and OpenAI without touching source code.
 
 System prompt loaded from `JARVIS.md` at runtime. Personality, behavioral rules, tool guidance, and briefing protocol all defined there.
 
+## Model Abstraction
+
+`models.py` exposes a single `chat()` function that normalizes Anthropic and OpenAI into a common `ChatResult` format. The agentic loop is provider-agnostic — tool use, message history, and stop-reason handling work the same regardless of backend.
+
+```toml
+# config.toml
+[model]
+provider = "anthropic"
+name     = "claude-opus-4-6"
+
+[model.briefing]
+provider = "anthropic"
+name     = "claude-sonnet-4-5-20250929"
+```
+
+Both providers auto-retry on rate limits (3×, 60 s backoff).
+
 ## Tool Suite
 
-All tools live in `tools/`, each exposing a `schema` and `execute` function. The registry in `tools/__init__.py` collects them automatically.
+Tools live in `tools/`, each exposing a `schema` dict and an `execute` function. They are **explicitly imported** — not auto-discovered. Register a new tool in both `tools/__init__.py` and whichever entry points should use it.
 
 ### Communication
 | Tool | Method | Notes |
@@ -52,10 +71,29 @@ All tools live in `tools/`, each exposing a `schema` and `execute` function. The
 | `search_web` | Tavily API | 5 results max, returns title + URL + snippet |
 | `web_fetch` | httpx + html2text | HTML-to-markdown, macOS SSL via truststore, 20k char limit |
 
+### Weather
+| Tool | Method | Notes |
+|---|---|---|
+| `get_weather` | Open-Meteo (free, no key) | Current conditions + 7-day forecast in °F/mph/in; named locations: `home`, `cupertino`, `tahoe`, `all` |
+
+### Markets
+| Tool | Method | Notes |
+|---|---|---|
+| `polymarket_search` | Polymarket CLI | Search prediction markets by keyword |
+| `polymarket_movers` | Polymarket CLI | Top movers by volume or price change |
+| `polymarket_dashboard` | Polymarket CLI | Portfolio/watchlist overview |
+
+### Trends
+| Tool | Method | Notes |
+|---|---|---|
+| `trends_search` | Google Trends CLI | Interest over time for a query; supports timeframes from 1 h to 10 y |
+| `trends_related` | Google Trends CLI | Related queries and topics |
+| `trends_trending` | Google Trends CLI | Real-time or daily trending searches |
+
 ### System
 | Tool | Method | Notes |
 |---|---|---|
-| `bash` | subprocess | 30s timeout, captures stdout + stderr |
+| `bash` | subprocess | 30 s timeout, captures stdout + stderr |
 | `read_file` | Python I/O | Plain file read |
 | `write_file` | Python I/O | Creates parent directories, full overwrite |
 
@@ -68,45 +106,58 @@ All tools live in `tools/`, each exposing a `schema` and `execute` function. The
 
 Runs via `run_briefing.sh` (cron-scheduled). JARVIS compiles and sends an iMessage digest covering:
 
-1. Weather — SF (home) and South Bay/Cupertino (work)
-2. Commute — SF to Cupertino via 280/101
-3. Unread email summary
-4. Recent iMessages needing replies
-5. Action items extracted from email and messages
-6. Package delivery status
-7. Top 3-5 news headlines (tech/AI/markets)
+1. Weather — SF (home), Cupertino (work), Tahoe
+2. Unread email summary
+3. Recent iMessages needing replies
+4. Action items extracted from email and messages
+5. Prediction market overview (Polymarket)
+6. Google Trends / news signals
+7. Top headlines (via web search)
 
-Uses a reduced tool set (read_email, read_imessage, search_web, send_imessage) on Sonnet 4.5 for cost efficiency.
+Tool set: `read_email`, `read_imessage`, `search_web`, `send_imessage`, `get_weather`, `polymarket_*`, `trends_*`.
 
 ## Configuration
+
+### `config.toml`
+
+Controls provider, model name, max tokens, temperature, and budget thresholds for both entry points. Loaded at startup via `config.py`.
+
+### Environment Variables (`.env`)
 
 | Variable | Purpose |
 |---|---|
 | `ANTHROPIC_API_KEY` | Claude API |
+| `OPENAI_API_KEY` | OpenAI API (optional) |
 | `TAVILY_API_KEY` | Web search |
+| `FIRECRAWL_API_KEY` | Firecrawl web scraping (optional) |
 | `EMAIL_ADDRESS` | Gmail address (IMAP/SMTP) |
 | `EMAIL_APP_PASSWORD` | Gmail app password |
 | `OPERATOR_PHONE` | Phone number for briefing delivery (iMessage) |
 
 Optional: `EMAIL_IMAP_HOST`, `EMAIL_SMTP_HOST`, `EMAIL_SMTP_PORT` (default to Gmail).
 
+## Token Tracking
+
+`usage.py` tracks input/output tokens per session, enforces a configurable budget, and estimates cost using a built-in price table (Anthropic and OpenAI models). Warns at 80% usage and halts the loop when the budget is exceeded.
+
 ## Dependencies
 
 | Package | Role |
 |---|---|
 | `anthropic` | Claude API client |
+| `openai` | OpenAI API client (optional) |
 | `python-dotenv` | Environment loading |
 | `tavily-python` | Web search |
 | `httpx` | HTTP client |
 | `html2text` | HTML-to-markdown |
 | `truststore` | macOS native SSL |
 
+Python 3.11+ required (`tomllib` is stdlib).
+
 ## Roadmap
 
-Ordered by impact and proximity to existing infrastructure.
-
 ### Near-term
-- **Calendar integration** — Read/create events via macOS Calendar (previously prototyped, source removed). Completes the briefing triad: email + messages + calendar.
+- **Calendar integration** — Read/create events via macOS Calendar. Completes the briefing triad: email + messages + calendar.
 - **Conversation persistence** — Save/load conversation history across sessions. JSON file or SQLite.
 - **Streaming output** — `client.messages.stream()` for real-time response rendering in the REPL.
 - **Reminders tool** — Create Apple Reminders via AppleScript. Natural complement to action-item extraction in briefings.
@@ -114,7 +165,6 @@ Ordered by impact and proximity to existing infrastructure.
 ### Mid-term
 - **Context window management** — Token counting, sliding window truncation, periodic summarization to sustain longer sessions.
 - **Evening briefing** — Tomorrow's schedule, unanswered messages, next-day weather. Reuses existing cron infrastructure.
-- **Multi-model routing** — Classify task complexity, route to Haiku/Sonnet/Opus accordingly.
 
 ### Long-term
 - **Sub-agent spawning** — Delegate research and multi-step tasks to focused child agents.
@@ -128,24 +178,34 @@ Ordered by impact and proximity to existing infrastructure.
 jarvis/
 ├── jarvis.py            # Interactive agent (REPL + single-command)
 ├── briefing.py          # Automated morning briefing
-├── run_briefing.sh      # Cron wrapper for briefing
+├── run_briefing.sh      # Cron wrapper for briefing (gitignored)
+├── models.py            # Provider abstraction — chat() for Anthropic + OpenAI
+├── config.py            # Config loader (dataclasses + tomllib)
+├── config.toml          # Model/provider/budget settings
+├── usage.py             # Token tracking and cost estimation
 ├── JARVIS.md            # System prompt — personality, rules, protocols
-├── GUIDE.md             # Developer reference — architecture and extension ideas
 ├── README.md            # This file
 ├── .env                 # API keys and credentials (not tracked)
 ├── tools/
-│   ├── __init__.py      # Tool registry and dispatcher
-│   ├── _contacts.py     # macOS Contacts helper
-│   ├── bash.py          # Shell command execution
-│   ├── read_file.py     # File reading
-│   ├── write_file.py    # File writing
-│   ├── read_email.py    # Gmail IMAP reader
-│   ├── send_email.py    # Gmail SMTP sender
-│   ├── read_imessage.py # iMessage reader (SQLite)
-│   ├── send_imessage.py # iMessage sender (AppleScript)
-│   ├── search_web.py    # Tavily web search
-│   └── web_fetch.py     # URL fetcher + HTML-to-markdown
-└── venv/                # Python 3.13 virtual environment
+│   ├── __init__.py          # Tool registry and dispatcher
+│   ├── _contacts.py         # macOS Contacts helper
+│   ├── bash.py              # Shell command execution
+│   ├── read_file.py         # File reading
+│   ├── write_file.py        # File writing
+│   ├── read_email.py        # Gmail IMAP reader
+│   ├── send_email.py        # Gmail SMTP sender
+│   ├── read_imessage.py     # iMessage reader (SQLite)
+│   ├── send_imessage.py     # iMessage sender (AppleScript)
+│   ├── search_web.py        # Tavily web search
+│   ├── web_fetch.py         # URL fetcher + HTML-to-markdown
+│   ├── get_weather.py       # Open-Meteo weather (no API key)
+│   ├── polymarket_search.py # Prediction market search
+│   ├── polymarket_movers.py # Prediction market movers
+│   ├── polymarket_dashboard.py # Polymarket portfolio overview
+│   ├── trends_search.py     # Google Trends — query interest over time
+│   ├── trends_related.py    # Google Trends — related queries
+│   └── trends_trending.py   # Google Trends — trending searches
+└── venv/                # Python virtual environment
 ```
 
 ## References
