@@ -1,6 +1,6 @@
 # JARVIS
 
-A personal AI agent built on Claude, running as a Python CLI. JARVIS handles email, messaging, web research, file operations, and delivers automated daily briefings — modeled after a sharp, no-nonsense British butler.
+A personal AI agent, running as a Python CLI. JARVIS handles email, messaging, web research, file operations, and delivers automated daily briefings — modeled after a sharp, no-nonsense British butler.
 
 ## Project Status
 
