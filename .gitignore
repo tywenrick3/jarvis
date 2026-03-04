@@ -11,6 +11,8 @@ config.py
 __pycache__
 .DS_Store
 
+/.firecrawl
+
 run_briefing.sh
 
 GUIDE.md
