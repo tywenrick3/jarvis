@@ -1,14 +1,11 @@
-import truststore
-truststore.inject_into_ssl()
-
-import httpx
-import html2text
+import os
+from firecrawl import Firecrawl
 
 MAX_CHARS = 20000
 
 schema = {
     "name": "web_fetch",
-    "description": "Fetch the contents of a URL and return the response body as markdown. HTML pages are automatically converted to readable markdown. Response is truncated to ~20k characters.",
+    "description": "Fetch the contents of a URL and return the page as clean markdown. Handles JavaScript-rendered pages, paywalls, and anti-bot measures. Response is truncated to ~20k characters.",
     "input_schema": {
         "type": "object",
         "properties": {
@@ -21,33 +18,25 @@ schema = {
     }
 }
 
-_converter = html2text.HTML2Text()
-_converter.ignore_links = False
-_converter.ignore_images = True
-_converter.body_width = 0
+_app = None
 
-_client = httpx.Client(
-    headers={"User-Agent": "Jarvis/1.0"},
-    timeout=15,
-    follow_redirects=True,
-)
+def _get_app():
+    global _app
+    if _app is None:
+        _app = Firecrawl(api_key=os.environ.get("FIRECRAWL_API_KEY"))
+    return _app
 
 
 def execute(url: str) -> str:
     try:
-        resp = _client.get(url)
-        resp.raise_for_status()
-    except httpx.HTTPStatusError as e:
-        return f"HTTP error {e.response.status_code} fetching {url}"
-    except httpx.RequestError as e:
-        return f"Request failed for {url}: {e}"
+        result = _get_app().scrape(url, formats=["markdown"], only_main_content=True)
+    except Exception as e:
+        return f"Fetch failed for {url}: {e}"
 
-    content_type = resp.headers.get("content-type", "")
+    text = result.markdown or ""
 
-    if "html" in content_type:
-        text = _converter.handle(resp.text)
-    else:
-        text = resp.text
+    if not text:
+        return f"No content returned for {url}"
 
     if len(text) > MAX_CHARS:
         text = text[:MAX_CHARS] + f"\n\n... truncated ({len(text)} chars total)"
