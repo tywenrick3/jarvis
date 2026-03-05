@@ -33,7 +33,7 @@ schema = {
 }
 
 
-def execute(to: str, subject: str, body: str, cc: str = "") -> str:
+def execute(to: str, subject: str, body: str, cc: str = "", skip_confirm: bool = False) -> str:
     address = os.environ.get("EMAIL_ADDRESS")
     password = os.environ.get("EMAIL_APP_PASSWORD")
     smtp_host = os.environ.get("EMAIL_SMTP_HOST", "smtp.gmail.com")
@@ -42,16 +42,17 @@ def execute(to: str, subject: str, body: str, cc: str = "") -> str:
     if not address or not password:
         return "Error: EMAIL_ADDRESS and EMAIL_APP_PASSWORD must be set in .env"
 
-    print(f"\n{'='*50}")
-    print(f"  TO:      {to}")
-    if cc:
-        print(f"  CC:      {cc}")
-    print(f"  SUBJECT: {subject}")
-    print(f"  BODY:\n{body}")
-    print(f"{'='*50}")
-    confirm = input("Send this email? [y/N]: ").strip().lower()
-    if confirm != "y":
-        return "Email cancelled by user."
+    if not skip_confirm:
+        print(f"\n{'='*50}")
+        print(f"  TO:      {to}")
+        if cc:
+            print(f"  CC:      {cc}")
+        print(f"  SUBJECT: {subject}")
+        print(f"  BODY:\n{body}")
+        print(f"{'='*50}")
+        confirm = input("Send this email? [y/N]: ").strip().lower()
+        if confirm != "y":
+            return "Email cancelled by user."
 
     msg = EmailMessage()
     msg["From"] = address
