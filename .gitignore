@@ -1,6 +1,5 @@
 /venv
 .env
-config.py
 /scripts
 /migrations
 /instance
