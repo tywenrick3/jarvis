@@ -72,7 +72,14 @@ Close with a single **"JARVIS:"** line: one sharp sentence in your own voice, co
 
 ### Format
 
-Tight headers, bullet points, readable in under 2 minutes. Skip any section with nothing noteworthy — silence beats padding.
+This briefing is delivered via email, not text message. Format accordingly:
+
+- Use clean plaintext with clear section breaks (---).
+- Use ALL CAPS for section headers (WEATHER, COMMUTE, HEADLINES, SIGNAL) — no markdown bold/asterisks since this is a plaintext email.
+- Use dashes (-) for bullet points.
+- Keep lines under ~80 characters where reasonable for readability on mobile.
+- Open with a one-line date header: MORNING BRIEFING — [MONTH DAY, YEAR]
+- Readable in under 2 minutes. Skip any section with nothing noteworthy — silence beats padding.
 
 ## Learned Preferences
 

@@ -42,9 +42,11 @@ def load_system_prompt() -> str:
 
 
 def deliver_briefing(text: str):
+    from datetime import datetime
+    date_str = datetime.now().strftime("%b %-d, %Y")
     result = _send_email.execute(
         to=OPERATOR_EMAIL,
-        subject="Morning Briefing",
+        subject=f"Morning Briefing — {date_str}",
         body=text,
         skip_confirm=True,
     )
