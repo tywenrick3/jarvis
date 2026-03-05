@@ -1,6 +1,7 @@
 annotated-doc==0.0.4
 python-dotenv>=1.0.0
 tavily-python>=0.3.0
+firecrawl-py>=1.0.0
 annotated-types==0.7.0
 anthropic==0.79.0
 anyio==4.12.1
