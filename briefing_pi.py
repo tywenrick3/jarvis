@@ -1,7 +1,14 @@
 from pathlib import Path
 
 from dotenv import load_dotenv
-from tools import search_web, polymarket_search, polymarket_movers, polymarket_dashboard, trends_search, trends_related, trends_trending, get_weather
+import tools.search_web as search_web
+import tools.polymarket_search as polymarket_search
+import tools.polymarket_movers as polymarket_movers
+import tools.polymarket_dashboard as polymarket_dashboard
+import tools.trends_search as trends_search
+import tools.trends_related as trends_related
+import tools.trends_trending as trends_trending
+import tools.get_weather as get_weather
 import tools.send_email as _send_email
 from config import load_config
 from models import chat
