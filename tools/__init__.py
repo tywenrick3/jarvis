@@ -1,7 +1,7 @@
 import inspect
-from tools import bash, read_email, read_file, read_imessage, search_web, send_email, send_imessage, web_fetch, write_file, polymarket_search, polymarket_movers, polymarket_dashboard, trends_search, trends_related, trends_trending, get_weather
+from tools import bash, read_email, read_file, read_imessage, search_web, send_email, send_imessage, web_fetch, write_file, polymarket_search, polymarket_movers, polymarket_dashboard, polymarket_recommend, trends_search, trends_related, trends_trending, get_weather
 
-_modules = [bash, read_email, read_file, read_imessage, search_web, send_email, send_imessage, web_fetch, write_file, polymarket_search, polymarket_movers, polymarket_dashboard, trends_search, trends_related, trends_trending, get_weather]
+_modules = [bash, read_email, read_file, read_imessage, search_web, send_email, send_imessage, web_fetch, write_file, polymarket_search, polymarket_movers, polymarket_dashboard, polymarket_recommend, trends_search, trends_related, trends_trending, get_weather]
 
 TOOLS = [m.schema for m in _modules]
 
