@@ -21,7 +21,7 @@ mdurl==0.1.2
 numpy==2.4.2
 pandas==3.0.1
 plotext==5.3.2
--e git+https://github.com/tywenrick3/polymarket.git@d30a83b41a874da58a11359b0860988de0ef950a#egg=polymarket_cli
+-e git+https://github.com/tywenrick3/polymarket.git@0ca1e3a#egg=polymarket_cli
 pydantic==2.12.5
 pydantic_core==2.41.5
 Pygments==2.19.2
