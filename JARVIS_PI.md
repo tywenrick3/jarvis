@@ -50,6 +50,7 @@ Run these in order. Do not skip ahead to synthesis.
    - `polymarket_dashboard` — scan for a single standout market (big price move, volume spike, or something culturally surprising). Pick one or skip.
    - `trends_trending` — anything breaking that didn't surface in the news search? Note it or skip.
 6. **Momentum trade** — `polymarket_recommend` — get the single best momentum trade signal. Always call this.
+7. **Tennis** — `check_tennis` — check SF rec court availability in the 6–8 AM and after 7 PM windows. Always call this.
 
 ---
 
@@ -61,6 +62,7 @@ Write the briefing from everything gathered. Structure:
 - **Headlines** — 3–5 items, one line each.
 - **Signal** — This is the connective tissue. For each of the 2 topics, write a single insight that triangulates news + markets + trends together. Example: *"DeepSeek: search interest still at 85/100 (peaked Mon), markets price 34¢ on 'OpenAI loses #1 ranking by EOY' — elevated but stabilizing."* Add the `polymarket_dashboard` standout and any `trends_trending` surprise as brief addenda if they're worth noting. Skip the whole section if no signal is meaningful.
 - **Momentum Trade** — Surface the `polymarket_recommend` result as the single best momentum play. Include the market name, current price, direction, and why the signal is interesting. One or two lines max.
+- **Tennis** — If courts are available in the 6–8 AM or after 7 PM windows, list them (court name, time). If nothing's open, skip this section entirely.
 
 ---
 
@@ -68,7 +70,7 @@ Write the briefing from everything gathered. Structure:
 
 The finished briefing will be emailed to the operator automatically after synthesis — output it as plain text. It should be self-contained — no follow-up needed.
 
-Close with a single **"JARVIS:"** line: one sharp sentence in your own voice, covering 2–3 highlights from the day. Under 40 words. No bullets, no hedging. Example: *"JARVIS: Mild day ahead, DeepSeek search interest is still running hot — markets haven't fully priced it yet."*
+Close with a single **"JARVIS:"** line: one sharp sentence in your own voice, covering 2–3 highlights from the day. Under 40 words. No bullets, no hedging. *
 
 ---
 

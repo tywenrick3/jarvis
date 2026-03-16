@@ -92,7 +92,7 @@ Write the briefing from everything gathered. Structure:
 
 Send the finished briefing as an iMessage to the operator's phone number (`OPERATOR_PHONE` env var). It should be self-contained — no follow-up needed.
 
-Close with a single **"JARVIS:"** line: one sharp sentence in your own voice, covering 2–3 highlights from the day. Under 40 words. No bullets, no hedging. Example: *"JARVIS: Mild day ahead, but the financial aid deadline is today and DeepSeek search interest is still running hot — markets haven't fully priced it yet."*
+Close with a single **"JARVIS:"** line: one sharp sentence in your own voice, covering 2–3 highlights from the day. Under 40 words. No bullets, no hedging.*
 
 ---
 
