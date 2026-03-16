@@ -40,17 +40,13 @@ When triggered, run the briefing in two strict phases: **Gather**, then **Synthe
 
 Run these in order. Do not skip ahead to synthesis.
 
-1. **Weather + Commute** — Call `get_weather(location="all")` — one call returns current conditions and 7-day forecast for Nob Hill (home), Apple Park (work), and Lake Tahoe. Note temp, feels-like, and anything notable (rain, fog, wind). Check for the Tahoe snow alert — if present, include it. Then search traffic on the 280/101 corridor — flag delays or incidents.
-2. **News** — Search top headlines, biased toward tech, AI, markets, finance. Identify the **2 most consequential topics** from the results — these will anchor Phase 1's remaining tool calls.
-3. **Signal gathering** — For each of the 2 chosen topics, run:
+1. **Weather** — Call `get_weather(location="all")` — one call returns current conditions and 7-day forecast for Nob Hill (home), Apple Park (work), and Lake Tahoe. Note temp, feels-like, and anything notable (rain, fog, wind). Check for the Tahoe snow alert — if present, include it.
+2. **Tennis** — `check_tennis` — check SF rec court availability in the 6–8 AM and after 7 PM windows. Always call this.
+3. **News** — Search top headlines, biased toward tech, AI, markets, finance. Identify the **2 most consequential topics** from the results — these will anchor Phase 1's remaining tool calls.
+4. **Signal gathering** — For each of the 2 chosen topics, run:
    - `polymarket_search` — what probability is the market pricing? Any notable 24hr move?
    - `trends_search(timeframe="7d", geo="US")` — is interest spiking, peaking, or fading?
-
-   Then call these once each, regardless of topic:
-   - `polymarket_dashboard` — scan for a single standout market (big price move, volume spike, or something culturally surprising). Pick one or skip.
-   - `trends_trending` — anything breaking that didn't surface in the news search? Note it or skip.
-6. **Momentum trade** — `polymarket_recommend` — get the single best momentum trade signal. Always call this.
-7. **Tennis** — `check_tennis` — check SF rec court availability in the 6–8 AM and after 7 PM windows. Always call this.
+5. **Momentum trade** — `polymarket_recommend` — get the single best momentum trade signal. Always call this.
 
 ---
 
@@ -58,11 +54,11 @@ Run these in order. Do not skip ahead to synthesis.
 
 Write the briefing from everything gathered. Structure:
 
-- **Weather / Commute** — one line each for SF and Cupertino; one line for traffic.
-- **Headlines** — 3–5 items, one line each.
-- **Signal** — This is the connective tissue. For each of the 2 topics, write a single insight that triangulates news + markets + trends together. Example: *"DeepSeek: search interest still at 85/100 (peaked Mon), markets price 34¢ on 'OpenAI loses #1 ranking by EOY' — elevated but stabilizing."* Add the `polymarket_dashboard` standout and any `trends_trending` surprise as brief addenda if they're worth noting. Skip the whole section if no signal is meaningful.
-- **Momentum Trade** — Surface the `polymarket_recommend` result as the single best momentum play. Include the market name, current price, direction, and why the signal is interesting. One or two lines max.
+- **Weather** — one line each for SF and Cupertino. Tahoe snow alert if present.
 - **Tennis** — If courts are available in the 6–8 AM or after 7 PM windows, list them (court name, time). If nothing's open, skip this section entirely.
+- **Headlines** — 3–5 items, one line each.
+- **Signal** — This is the connective tissue. For each of the 2 topics, write a single insight that triangulates news + markets + trends together. Example: *"DeepSeek: search interest still at 85/100 (peaked Mon), markets price 34¢ on 'OpenAI loses #1 ranking by EOY' — elevated but stabilizing."* Skip the whole section if no signal is meaningful.
+- **Momentum Trade** — Surface the `polymarket_recommend` result as the single best momentum play. Include the market name, current price, direction, and why the signal is interesting. One or two lines max.
 
 ---
 

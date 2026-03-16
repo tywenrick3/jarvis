@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from dotenv import load_dotenv
-from tools import read_email, read_imessage, search_web, send_imessage, polymarket_search, polymarket_movers, polymarket_dashboard, polymarket_recommend, trends_search, trends_related, trends_trending, get_weather, check_tennis
+from tools import read_email, read_imessage, search_web, send_imessage, polymarket_search, polymarket_movers, polymarket_recommend, trends_search, trends_related, get_weather, check_tennis
 from config import load_config
 from models import chat
 from usage import UsageTracker
@@ -16,7 +16,7 @@ tracker = UsageTracker(budget=cfg.budget)
 SYSTEM_PROMPT_PATH = Path(__file__).parent / "JARVIS.md"
 OPERATOR_PHONE = os.environ.get("OPERATOR_PHONE", "")
 
-_modules = [read_email, read_imessage, search_web, send_imessage, polymarket_search, polymarket_movers, polymarket_dashboard, polymarket_recommend, trends_search, trends_related, trends_trending, get_weather, check_tennis]
+_modules = [read_email, read_imessage, search_web, send_imessage, polymarket_search, polymarket_movers, polymarket_recommend, trends_search, trends_related, get_weather, check_tennis]
 TOOLS = [m.schema for m in _modules]
 _registry = {m.schema["name"]: m.execute for m in _modules}
 

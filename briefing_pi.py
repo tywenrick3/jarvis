@@ -4,11 +4,10 @@ from dotenv import load_dotenv
 import tools.search_web as search_web
 import tools.polymarket_search as polymarket_search
 import tools.polymarket_movers as polymarket_movers
-import tools.polymarket_dashboard as polymarket_dashboard
 import tools.polymarket_recommend as polymarket_recommend
 import tools.trends_search as trends_search
 import tools.trends_related as trends_related
-import tools.trends_trending as trends_trending
+import tools.check_tennis as check_tennis
 import tools.get_weather as get_weather
 import tools.send_email as _send_email
 from config import load_config
@@ -24,7 +23,7 @@ tracker = UsageTracker(budget=cfg.budget)
 SYSTEM_PROMPT_PATH = Path(__file__).parent / "JARVIS_PI.md"
 OPERATOR_EMAIL = os.environ.get("OPERATOR_EMAIL", "t_wenrick@apple.com")
 
-_modules = [search_web, polymarket_search, polymarket_movers, polymarket_dashboard, polymarket_recommend, trends_search, trends_related, trends_trending, get_weather]
+_modules = [search_web, polymarket_search, polymarket_movers, polymarket_recommend, trends_search, trends_related, get_weather, check_tennis]
 TOOLS = [m.schema for m in _modules]
 _registry = {m.schema["name"]: m.execute for m in _modules}
 
