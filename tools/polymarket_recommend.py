@@ -3,21 +3,32 @@ import subprocess
 schema = {
     "name": "polymarket_recommend",
     "description": (
-        "Get the single best Polymarket momentum trade signal. "
-        "Uses price movement, volume, and mid-range weighting to surface "
-        "the most interesting buy opportunity across top markets."
+        "Get the best Polymarket trade signal using a chosen strategy. "
+        "Strategies: mean-reversion (default, best), momentum, sma, composite, cross-market."
     ),
     "input_schema": {
         "type": "object",
-        "properties": {},
+        "properties": {
+            "strategy": {
+                "type": "string",
+                "description": "Strategy: mean-reversion, momentum, sma, composite, cross-market",
+                "default": "mean-reversion",
+                "enum": ["mean-reversion", "momentum", "sma", "composite", "cross-market"],
+            },
+            "top": {
+                "type": "integer",
+                "description": "Number of signals to surface (default 3)",
+                "default": 3,
+            },
+        },
         "required": [],
     },
 }
 
 
-def execute() -> str:
+def execute(strategy: str = "mean-reversion", top: int = 3) -> str:
     result = subprocess.run(
-        ["polymarket", "recommend", "--format", "json"],
+        ["polymarket", "recommend", "-s", strategy, "-n", str(top), "--format", "json"],
         capture_output=True,
         text=True,
         timeout=30,
