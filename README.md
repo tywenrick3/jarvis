@@ -184,8 +184,7 @@ jarvis/
 ├── config.toml          # Model/provider/budget settings
 ├── usage.py             # Token tracking and cost estimation
 ├── JARVIS.md            # System prompt — personality, rules, protocols
-├── README.md            # This file
-├── .env                 # API keys and credentials (not tracked)
+├── README.md
 ├── tools/
 │   ├── __init__.py          # Tool registry and dispatcher
 │   ├── _contacts.py         # macOS Contacts helper
